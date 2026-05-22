@@ -100,6 +100,7 @@ def build():
     out = []
     out.append(f"<!doctype html><html lang='en'><head><meta charset='utf-8'>")
     out.append(f"<meta name='viewport' content='width=device-width,initial-scale=1'>")
+    out.append("<meta name='author' content='Attie Retief'>")
     out.append(f"<title>{html.escape(fw['project']['name'])} — {html.escape(fw['project']['tagline'])}</title>")
     out.append(f"<style>{css}</style></head><body><div class='wrap'>")
     out.append("<header class='hero'>")
@@ -113,8 +114,8 @@ def build():
                f"<span>{overall_pct}% toward {total_target}</span></div></div>")
 
     for arc in fw["arcs"]:
-        out.append(f"<h2 class='arc'>{html.escape(arc['label'])} "
-                   f"<span class='gloss'>· {html.escape(arc['gloss'])}</span>"
+        out.append(f"<h2 class='arc'>{html.escape(arc['gloss'])} "
+                   f"<span class='gloss'>({html.escape(arc['label'])})</span>"
                    f"<span class='ct'>target {arc['target']}</span></h2>")
         out.append(f"<div class='arc-blurb'>{html.escape(arc['blurb'].strip())}</div>")
         for mv in arc["movements"]:
@@ -144,9 +145,13 @@ def build():
                    f"<div class='tline'>{html.escape(t['line'])}</div>")
     out.append("</div>")
 
-    stamp = datetime.date.today().isoformat()
-    out.append(f"<footer>Generated {stamp} from the repository. "
-               f"Progress reflects committed songs. — Paraverses</footer>")
+    today = datetime.date.today()
+    stamp = today.isoformat()
+    out.append("<footer>"
+               "<div>Words and music by Attie Retief.</div>"
+               f"<div>Generated {stamp} from the repository. "
+               f"Progress reflects committed songs. — Paraverses</div>"
+               "</footer>")
     out.append("</div></body></html>")
 
     os.makedirs(SITE, exist_ok=True)
