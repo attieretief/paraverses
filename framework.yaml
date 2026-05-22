@@ -1,0 +1,149 @@
+project:
+  name: Paraverses
+  tagline: A Sung Gospel
+  description: >
+    A bounded body of newly composed worship songs — original lyrics and original
+    music — in the lineage of the Reformed Skrifberymings and the Scottish Paraphrases.
+    Not a translation: an original canon, worked out up front so the finished body
+    can be read back as one architecture in which the Gospel is visible.
+  target_total: 72
+  use: working hymnal
+  style: >
+    Simple, congregation-led melodies singable without a band or lead voice —
+    modest range, stepwise motion, strong regular metre, modern-hymn idiom.
+  trinity_note: >
+    Movement 1 adores the divine nature; the explicit Father/Son/Spirit confession
+    is not opened as a separate movement.
+
+threads:
+  - name: Light
+    line: The uncreated radiance that no eye contains, that enters the dark, and that finally needs no sun.
+  - name: The Name
+    line: The Name too holy to contain, made flesh, and finally written on the redeemed.
+  - name: Water and Thirst
+    line: The thirst of the dry ground, the water given freely, the river that never runs dry.
+
+arcs:
+  - id: ellende
+    label: Ellende
+    gloss: Our Need
+    target: 18
+    blurb: >
+      The canon opens with God, not with us, so need is felt against holiness rather
+      than mere unhappiness. Built full enough to supply most opening-adoration repertoire.
+    movements:
+      - id: 1
+        title: The God Who Is
+        subtitle: Adoration of the divine nature.
+        body: >
+          Aseity, simplicity, infinity, immutability, and the Triune God — worship of
+          who God is before the story begins. The Sanctus movement; it is load-bearing
+          that the work opens here.
+        passages: "Isaiah 6; Revelation 4; the Athanasian confession of the divine nature; Romans 11:33-36."
+        mode: Adoration, awe.
+        target: 7
+      - id: 2
+        title: The God Who Made
+        subtitle: Creation and the goodness of the made order.
+        body: The world called good, humanity in the image, the order and gift of creation.
+        passages: "Genesis 1; Psalm 8; Psalm 19; Colossians 1:16-17."
+        mode: Wonder, thanksgiving.
+        target: 6
+      - id: 3
+        title: The Fracture
+        subtitle: Fall, exile, and honest lament.
+        body: >
+          The good order broken; sin diagnosed; the groaning of creation; the church
+          learning to lament truthfully rather than sentimentally.
+        passages: "Genesis 3; Romans 5; Romans 8:19-23; the penitential Psalms."
+        mode: Confession, lament.
+        target: 5
+
+  - id: verlossing
+    label: Verlossing
+    gloss: Grace
+    target: 36
+    blurb: >
+      The largest arc, built for use, not only for the retrospective arc. The
+      cross-resurrection movement remains the densest single cluster, yet each
+      movement here is independently usable in ordinary worship.
+    movements:
+      - id: 4
+        title: The God Who Promised
+        subtitle: Covenant and longing.
+        body: >
+          Patriarchs, exodus, the Song of Moses, the prophets' ache and hope — the
+          Advent register of waiting.
+        passages: "Exodus 15; Isaiah 9; Isaiah 40; Habakkuk 3:17-19."
+        mode: Longing, trust.
+        target: 8
+      - id: 5
+        title: The God Who Came
+        subtitle: Incarnation and the life of Christ.
+        body: >
+          The Lukan canticles, the angels' Gloria, the Beatitudes, the teaching and
+          the gentle invitation.
+        passages: "Magnificat, Benedictus, Nunc Dimittis (Luke 1-2); Luke 2:14; Matthew 5:3-12; Matthew 11:28-30; John 1:14."
+        mode: Joy, adoration.
+        target: 9
+      - id: 6
+        title: The God Who Suffered and Rose
+        subtitle: The hinge of the canon.
+        body: >
+          Cross, atonement, descent, resurrection, ascension, exaltation. The densest
+          single cluster in the work — the centre of gravity made audible.
+        passages: "Isaiah 53; the seven cross-words; Philippians 2:5-11; Romans 8:31-39; the resurrection and ascension."
+        mode: Awe, gratitude, triumph.
+        target: 11
+      - id: 7
+        title: The God Who Indwells
+        subtitle: Grace applied.
+        body: >
+          Pentecost, union with Christ, and the ordo salutis sung — calling, faith,
+          justification, sanctification, perseverance.
+        passages: "Acts 2; Romans 8; Ephesians 1:3-14; Ephesians 6:10-20; 1 Corinthians 13."
+        mode: Assurance, consecration.
+        target: 8
+
+  - id: dankbaarheid
+    label: Dankbaarheid
+    gloss: Gratitude
+    target: 18
+    blurb: >
+      The redeemed life lived forward, opening onto glory. Built full: Movement 8
+      supplies most of the grateful-life and closing repertoire. The canon ends as
+      Scripture ends — in unceasing worship.
+    movements:
+      - id: 8
+        title: The Grateful Life
+        subtitle: Obedience as thanksgiving.
+        body: >
+          The law as the shape of gratitude (the third use), love, the church, the
+          Lord's Supper, vocation, and the daily Christian walk.
+        passages: "Exodus 20 as thankful obedience; 1 Corinthians 13; the communion paraphrase (1 Cor 11); vocation and love of neighbour."
+        mode: Dedication, communion.
+        target: 11
+      - id: 9
+        title: The God Who Comes
+        subtitle: Consummation and doxology.
+        body: >
+          Judgment, the marriage of the Lamb, the new Jerusalem, all things made new,
+          the eternal doxology and the final Amen.
+        passages: "Revelation 19-22; the Lamb's song; the new creation; the closing Amens."
+        mode: Hope, doxology, longing fulfilled.
+        target: 7
+
+# Lifecycle a song moves through. The site counts by these.
+statuses:
+  - id: idea
+    label: Idea
+    weight: 0
+  - id: draft-lyric
+    label: Draft lyric
+    weight: 0.4
+  - id: draft-melody
+    label: Draft melody
+    weight: 0.7
+  - id: complete
+    label: Complete
+    weight: 1.0
