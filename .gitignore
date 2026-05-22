@@ -1,6 +1,7 @@
 # The published site is built in CI from framework.yaml + songs/.
 # Don't commit generated output.
 site/
+_site/
 __pycache__/
 *.pyc
 .DS_Store

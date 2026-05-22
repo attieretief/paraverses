@@ -1,11 +1,30 @@
 project:
   name: Paraverses
   tagline: A Sung Gospel
+  subtitle: >
+    New English Scripture-songs in the lineage of the
+    Reformed Skrifberymings and the Scottish Paraphrases.
+  document_label: "Master Framework · Working Document v0.1"
   description: >
     A bounded body of newly composed worship songs — original lyrics and original
     music — in the lineage of the Reformed Skrifberymings and the Scottish Paraphrases.
     Not a translation: an original canon, worked out up front so the finished body
     can be read back as one architecture in which the Gospel is visible.
+  purpose_and_posture: >
+    Paraverses is a bounded body of newly composed worship songs — original
+    lyrics and original music — that borrow the spirit, discipline, and rigour
+    of two Reformed metrical-Scripture traditions: the Afrikaans
+    Skrifberymings of the GKSA and the Scottish Translations and Paraphrases
+    of 1781. It does not translate either corpus, nor reproduce their
+    selection of passages or their numbering. It builds its own canon, worked
+    out in full before it is filled, so that the finished body can be read
+    back as a single architecture in which the Gospel is visible — not merely
+    as a collection that accumulated.
+  governing_aim: >
+    When the work is complete, a listener moving through it should traverse
+    the whole Gospel — from the being of God, through the fall, to redemption
+    accomplished and applied, and on into glory — and should be able to see
+    the intent in the very shape.
   target_total: 72
   use: working hymnal
   style: >
@@ -15,13 +34,107 @@ project:
     Movement 1 adores the divine nature; the explicit Father/Son/Spirit confession
     is not opened as a separate movement.
 
+design_principles:
+  - title: Fused spine
+    body: >
+      A redemptive-historical vertical (what God has done) carries the arc;
+      a worship-response horizontal (what the gathered church does — adore,
+      confess, lament, thank, commission) cross-weaves every movement.
+  - title: Catechetical macro-frame
+    body: >
+      The whole is shaped by Heidelberg's guilt–grace–gratitude
+      (ellende–verlossing–dankbaarheid), the confession native to the GKSA
+      tradition, with the redemptive-historical movements nested inside.
+  - title: Weighted, yet liturgically complete
+    body: >
+      Grace remains the largest arc, but the work is built as a working
+      hymnal: every movement holds enough songs for ordinary weekly use.
+      Opening adoration (Movement 1) and grateful-life closers (Movement 8)
+      are deliberately full, since these are what a congregation reaches for
+      most Sundays. Distribution is weighted toward Grace without starving
+      the high-traffic movements.
+  - title: Roughly bounded
+    body: >
+      Target ≈72 songs — between the Scots' 67 and the GKSA's 79, situating
+      the work in the lineage; richly divisible (6×12, 3×24); quietly
+      resonant (the seventy-two of Luke 10). Fixed enough to be a finished
+      body, flexible enough to breathe.
+  - title: Thematic thread, not literal
+    body: >
+      Unity comes from three theological motifs resurfacing across movements
+      in new dress — never a repeated lyric or musical fragment: light, the
+      Name, and water/thirst.
+  - title: Congregation-led, simple melody
+    body: >
+      Songs are written to be carried by an ordinary congregation without a
+      band or lead singer — singable a cappella or from a single keyboard.
+      Modest range (about an octave, comfortably mid-voice), stepwise motion
+      over wide leaps, strong regular metre, and phrases that resolve rather
+      than hang. The idiom sits at the modern-hymn end (Getty/Townend
+      register), closer to the paraphrase DNA than to band-led contemporary
+      worship.
+
 threads:
   - name: Light
     line: The uncreated radiance that no eye contains, that enters the dark, and that finally needs no sun.
+    in_arcs:
+      - arc: ellende
+        text: >
+          God as unapproachable Light (Movement 1); light spoken over the
+          formless dark at creation (Movement 2); and the light withdrawn —
+          the world in shadow, the people who walk in darkness (Movement 3).
+      - arc: verlossing
+        text: >
+          The promised light dawning on those in darkness, Isaiah's sunrise
+          (Movement 4); the true Light coming into the world, the star, the
+          Word made flesh (Movement 5); the noon turned to darkness at the
+          cross and the resurrection daybreak (Movement 6); the inward
+          illumination of the Spirit (Movement 7).
+      - arc: dankbaarheid
+        text: >
+          Walking as children of light in the grateful life (Movement 8);
+          the City that needs no sun or moon, for God is its light and the
+          Lamb its lamp (Movement 9).
   - name: The Name
     line: The Name too holy to contain, made flesh, and finally written on the redeemed.
+    in_arcs:
+      - arc: ellende
+        text: >
+          The unspeakable, incomprehensible Name adored (Movement 1); the
+          Name by which all things were made (Movement 2); the Name profaned
+          and forgotten in the fall (Movement 3).
+      - arc: verlossing
+        text: >
+          The Name promised — Immanuel, God-with-us (Movement 4); 'you shall
+          call His name Jesus,' the Name above every name confessed
+          (Movements 5–6, Philippians 2); calling on the Name and being
+          saved, baptised into the Name (Movement 7).
+      - arc: dankbaarheid
+        text: >
+          Bearing the Name worthily in daily life, hallowing it (Movement 8);
+          the new Name written on the overcomer, the Name on every forehead
+          in the City (Movement 9).
   - name: Water and Thirst
     line: The thirst of the dry ground, the water given freely, the river that never runs dry.
+    in_arcs:
+      - arc: ellende
+        text: >
+          God as the fountain of living water and source of all good
+          (Movement 1); the waters of creation, the deep (Movement 2); the
+          parched land, exile, the soul that thirsts and finds no stream
+          (Movement 3).
+      - arc: verlossing
+        text: >
+          The Servant springing up like a root from dry ground, water
+          promised in the wilderness (Movement 4); 'I thirst' from the cross,
+          and the living water Christ gives (Movements 5–6); the Spirit
+          poured out, washing and indwelling (Movement 7, Pentecost and
+          union).
+      - arc: dankbaarheid
+        text: >
+          The cup of the Supper and the watered, fruitful life (Movement 8);
+          the river of the water of life, clear as crystal, and the free
+          invitation — 'let the thirsty come' (Movement 9).
 
 arcs:
   - id: ellende
@@ -132,6 +245,39 @@ arcs:
         passages: "Revelation 19-22; the Lamb's song; the new creation; the closing Amens."
         mode: Hope, doxology, longing fulfilled.
         target: 7
+
+decisions:
+  resolved: >
+    Use: working hymnal (songs pulled individually into ordinary worship), so the
+    distribution is weighted toward Grace but kept liturgically complete throughout.
+    Size: ≈72, roughly fixed. Threads: light, the Name, water/thirst (adopted).
+    Style: simpler congregation-led melodies, singable without a band or lead voice.
+    Trinity: Movement 1 adores the divine nature; the explicit Father/Son/Spirit
+    confession is not opened as a separate movement.
+  open:
+    - >
+      Exact song counts per movement within the 18 / 36 / 18 arc targets — and
+      whether any hinge (e.g. a closing Amen or doxology) is deliberately a single
+      song.
+    - >
+      The degree of shared metre across songs: enough common metre (CM/LM/SM) for
+      tunes to be interchangeable and quickly learned, versus each song finding its
+      own form.
+    - >
+      Whether to publish with a companion keyboard/accompaniment edition from the
+      outset, given the single-instrument, congregation-led intent.
+
+lineage: >
+  Paraverses does not invent a category; it continues one. The Scottish Paraphrases
+  (1781, ~67 items) versified non-Psalm Scripture in singable metre as a controlled
+  supplement to the metrical Psalter, drawing on Watts and Doddridge — a precedent
+  for reshaping existing devotional material into a Reformed singing tradition. The
+  GKSA Skrifberymings (grown from 50 to 79 under careful synodical oversight) did
+  the same in Afrikaans, largely on Genevan metres. Both arise from the Regulative
+  Principle and both carry a live, unresolved tension about whether versifying
+  non-Psalm Scripture expands or strains exclusive psalmody. Paraverses inherits
+  the form, the rigour, and that argument — and answers it by building with
+  explicit Gospel intent.
 
 # Lifecycle a song moves through. The site counts by these.
 statuses:
