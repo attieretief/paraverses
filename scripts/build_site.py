@@ -7,7 +7,7 @@ Outputs:
   site/songs/*.html      — one page per song (drill-in)
   site/data.json         — small summary blob
 """
-import os, re, json, html, datetime, sys
+import os, re, json, html, datetime, sys, shutil, subprocess, tempfile
 
 try:
     import yaml
@@ -21,8 +21,10 @@ except ImportError:
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SONGS = os.path.join(ROOT, "songs")
+AUDIO = os.path.join(ROOT, "audio")
 SITE = os.path.join(ROOT, "site")
 SITE_SONGS = os.path.join(SITE, "songs")
+SITE_AUDIO = os.path.join(SITE, "audio")
 
 GREEN, GOLD, CREAM, SLATE = "#1A2E1E", "#C9A84C", "#F7F4EF", "#5A6B5E"
 
@@ -132,9 +134,13 @@ h2.arc .ct {{ float:right; color:var(--gold); font-size:16px; }}
             padding:18px 22px; margin:14px 0; color:#444; }}
 footer {{ text-align:center; color:var(--slate); font-size:13px; margin-top:48px; }}
 footer div {{ margin:2px 0; }}
+footer a, .song-page .body a, .song-page .ascription a {{
+    color:inherit; border-bottom:1px solid var(--gold); text-decoration:none; }}
+footer a:hover, .song-page .body a:hover, .song-page .ascription a:hover {{
+    color:var(--green); }}
 
 /* Song-page specifics */
-.song-page {{ max-width:720px; margin:0 auto; padding:48px 24px 96px; }}
+.song-page {{ max-width:1080px; margin:0 auto; padding:48px 24px 96px; }}
 .song-page .back {{ color:var(--slate); font-size:13px; text-decoration:none;
                      letter-spacing:1px; text-transform:uppercase; }}
 .song-page .back:hover {{ color:var(--green); }}
@@ -151,11 +157,86 @@ footer div {{ margin:2px 0; }}
 .song-page .body p {{ white-space:pre-line; }}
 .song-page .body hr {{ border:0; border-top:1px solid #e3ddd0; margin:24px 0; }}
 .song-page .body em {{ color:var(--slate); }}
+.song-page .demo {{ background:white; border:1px solid #e3ddd0; border-radius:10px;
+                     padding:14px 18px; margin:10px 0 24px; }}
+.song-page .demo-label {{ font-size:12px; color:var(--slate); letter-spacing:1px;
+                           text-transform:uppercase; margin-bottom:6px; }}
+.song-page .demo audio {{ width:100%; display:block; }}
+.song-page .demo-empty {{ color:var(--slate); font-style:italic; font-size:14px;
+                           padding:4px 0; }}
+.song-page .lead-sheet {{ background:white; border:1px solid #e3ddd0; border-radius:10px;
+                           padding:14px 18px; margin:18px 0; overflow-x:auto; }}
+.song-page .lead-sheet svg {{ max-width:100%; height:auto; display:block;
+                               margin:0 auto; }}
+.song-page .lead-sheet-error {{ color:#a00; font-family:Menlo,monospace; font-size:13px; }}
+.song-page .lead-sheet-error pre {{ background:#fafafa; border:1px solid #eee;
+                                      padding:8px 10px; margin-top:8px;
+                                      white-space:pre-wrap; }}
 """
+
+LICENSE_LINK = "https://creativecommons.org/licenses/by-sa/4.0/"
+LICENSE_LABEL = "CC BY-SA 4.0"
 
 def pill(fw, sid):
     colors = {"idea":"#aaa","draft-lyric":"#b08900","draft-melody":"#7a8b6e","complete":GREEN}
     return f'<span class="pill" style="background:{colors.get(sid,"#aaa")}">{html.escape(status_label(fw, sid))}</span>'
+
+ABC_FORMAT_PRELUDE = (
+    "%%staffsep 80\n"
+    "%%sysstaffsep 24\n"
+)
+
+def render_abc_to_svg(abc_text):
+    """Render ABC notation text to inline SVG via abcm2ps. Returns SVG or None."""
+    tmp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".abc", delete=False,
+                                         encoding="utf-8") as f:
+            f.write(ABC_FORMAT_PRELUDE)
+            f.write(abc_text)
+            tmp_path = f.name
+        result = subprocess.run(
+            ["abcm2ps", "-v", "-O", "-", tmp_path],
+            capture_output=True, text=True, timeout=15
+        )
+        if result.returncode != 0 or not result.stdout.strip():
+            return None
+        return result.stdout
+    except (FileNotFoundError, subprocess.SubprocessError, OSError):
+        return None
+    finally:
+        if tmp_path and os.path.exists(tmp_path):
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+
+ABC_BLOCK_RE = re.compile(r'<pre><code class="language-abc">(.*?)</code></pre>', re.S)
+
+def expand_abc_in_html(body_html):
+    """Replace ```abc fenced blocks (already rendered as <pre><code>) with SVG lead sheets."""
+    def replace(m):
+        abc_text = html.unescape(m.group(1))
+        svg = render_abc_to_svg(abc_text)
+        if svg is None:
+            return ('<div class="lead-sheet lead-sheet-error">'
+                    'ABC source could not be rendered (abcm2ps unavailable or invalid syntax). '
+                    'Source:<pre>' + html.escape(abc_text) + '</pre></div>')
+        return f'<div class="lead-sheet">{svg}</div>'
+    return ABC_BLOCK_RE.sub(replace, body_html)
+
+LEAD_SHEET_SECTION_RE = re.compile(
+    r'<h2>Lead sheet</h2>\s*(<div class="lead-sheet[^"]*">.*?</div>)',
+    re.S,
+)
+
+def extract_lead_sheet(body_html):
+    """Pull the Lead sheet heading + rendered notation out of the body so it can be
+    placed beside the demo audio. Returns (body_without_lead_sheet, lead_sheet_html or None)."""
+    m = LEAD_SHEET_SECTION_RE.search(body_html)
+    if not m:
+        return body_html, None
+    return LEAD_SHEET_SECTION_RE.sub("", body_html, count=1), m.group(1)
 
 def render_song_page(fw, song):
     title = str(song.get("title", "(untitled)"))
@@ -172,6 +253,8 @@ def render_song_page(fw, song):
     body_md = song.get("_body", "").strip()
     body_md = re.sub(r"^#\s+.*\n+", "", body_md, count=1)
     body_html = md.markdown(body_md, extensions=["extra"])
+    body_html = expand_abc_in_html(body_html)
+    body_html, lead_sheet_html = extract_lead_sheet(body_html)
 
     out = []
     out.append("<!doctype html><html lang='en'><head><meta charset='utf-8'>")
@@ -199,8 +282,42 @@ def render_song_page(fw, song):
     row("Written", song.get("written"))
     out.append("</dl>")
 
+    slug = song["_slug"]
+    audio_variants = []
+    if os.path.isdir(AUDIO):
+        for fn in sorted(os.listdir(AUDIO)):
+            if not fn.endswith(".mp3"):
+                continue
+            if fn == f"{slug}.mp3":
+                audio_variants.append((fn, "Demo recording"))
+            elif fn.startswith(f"{slug}-"):
+                suffix = fn[len(slug) + 1:-4]
+                audio_variants.append((fn, suffix.replace("-", " ").capitalize()))
+    if audio_variants:
+        for fn, label in audio_variants:
+            out.append("<div class='demo'>")
+            out.append(f"<div class='demo-label'>{html.escape(label)}</div>")
+            out.append(f"<audio controls preload='metadata' "
+                       f"src='../audio/{html.escape(fn)}'></audio>")
+            out.append("</div>")
+    else:
+        out.append("<div class='demo'>"
+                   "<div class='demo-label'>Demo recording</div>"
+                   "<div class='demo-empty'>Coming soon.</div>"
+                   "</div>")
+
+    if lead_sheet_html:
+        out.append(lead_sheet_html)
+
     out.append(f"<div class='body'>{body_html}</div>")
-    out.append("<footer><div>Words and music by Attie Retief.</div></footer>")
+    year = datetime.date.today().year
+    out.append("<footer>"
+               f"<div>Words and music &copy; {year} "
+               "<a href='https://attieretief.com'>Attie Retief</a>. "
+               f"Licensed under <a href='{LICENSE_LINK}'>{LICENSE_LABEL}</a>.</div>"
+               "<div>Free to sing, print, project, record, translate, and arrange "
+               "with attribution and same-license sharing.</div>"
+               "</footer>")
     out.append("</div></body></html>")
     return "\n".join(out)
 
@@ -326,8 +443,14 @@ def render_index(fw, songs, by_movement):
 
     # Footer
     stamp = datetime.date.today().isoformat()
+    year = datetime.date.today().year
     out.append("<footer>"
-               "<div>Words and music by Attie Retief.</div>"
+               f"<div>Words and music &copy; {year} "
+               "<a href='https://attieretief.com'>Attie Retief</a>. "
+               f"Licensed under <a href='{LICENSE_LINK}'>{LICENSE_LABEL}</a>. "
+               "Site code: <a href='https://opensource.org/licenses/MIT'>MIT</a>.</div>"
+               "<div>Free for congregational worship, printing, projection, recording, "
+               "translation, and arrangement with attribution and same-license sharing.</div>"
                f"<div>Generated {stamp} from the repository. "
                "Progress reflects committed songs. — Paraverses</div>"
                "</footer>")
@@ -342,6 +465,15 @@ def build():
         by_movement.setdefault(s.get("movement"), []).append(s)
 
     os.makedirs(SITE_SONGS, exist_ok=True)
+    os.makedirs(SITE_AUDIO, exist_ok=True)
+
+    with open(os.path.join(SITE, "CNAME"), "w", encoding="utf-8") as f:
+        f.write("paraverses.attieretief.com\n")
+
+    if os.path.isdir(AUDIO):
+        for fn in os.listdir(AUDIO):
+            if fn.endswith(".mp3"):
+                shutil.copy2(os.path.join(AUDIO, fn), os.path.join(SITE_AUDIO, fn))
 
     with open(os.path.join(SITE, "index.html"), "w", encoding="utf-8") as f:
         f.write(render_index(fw, songs, by_movement))

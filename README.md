@@ -41,10 +41,21 @@ paraverses/
 ## Build locally
 
 ```bash
-pip install pyyaml
+# Python dependencies
+pip install -r requirements.txt
+
+# Lead-sheet renderer (ABC → SVG)
+brew install abcm2ps       # macOS
+sudo apt-get install -y abcm2ps   # Ubuntu/Debian
+
 python scripts/build_site.py
 # open site/index.html
 ```
+
+Songs may include a `Lead sheet` section with an `abc` fenced code block; the
+build script pipes it through `abcm2ps -v` and embeds the resulting SVG inline.
+Songs may also have a demo MP3 at `audio/<slug>.mp3` — when present, the build
+copies it to `site/audio/` and renders an `<audio>` player on the song page.
 
 ## Status lifecycle
 
@@ -54,6 +65,21 @@ python scripts/build_site.py
 | `draft-lyric` | lyric drafted | 0.4 |
 | `draft-melody` | melody sketched | 0.7 |
 | `complete` | lyric + melody done | 1.0 |
+
+## Licensing
+
+Two licenses cover this repository:
+
+- **Lyrics, music, lead sheets, demo recordings, framework prose** —
+  [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/).
+  Congregations are free to sing, print, project, record, translate, and arrange
+  these works without further permission, provided attribution is given and any
+  derivative works are released under the same license. See [`LICENSE-CONTENT`](LICENSE-CONTENT).
+- **Build scripts and site code** — [MIT](LICENSE).
+
+Required attribution for any reuse of the creative content:
+
+> Words and music by Attie Retief, from Paraverses, licensed under CC BY-SA 4.0.
 
 ---
 
