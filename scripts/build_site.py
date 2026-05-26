@@ -144,6 +144,11 @@ footer a:hover, .song-page .body a:hover, .song-page .ascription a:hover {{
 .song-page .back {{ color:var(--slate); font-size:13px; text-decoration:none;
                      letter-spacing:1px; text-transform:uppercase; }}
 .song-page .back:hover {{ color:var(--green); }}
+.song-page .present-link {{ float:right; color:var(--green); font-size:13px;
+                              text-decoration:none; letter-spacing:1px;
+                              text-transform:uppercase; border:1px solid var(--gold);
+                              border-radius:6px; padding:6px 12px; }}
+.song-page .present-link:hover {{ background:var(--green); color:var(--cream); }}
 .song-page h1 {{ color:var(--green); font-size:38px; margin:18px 0 4px; }}
 .song-page .ascription {{ color:var(--slate); font-style:italic; margin-bottom:18px; }}
 .song-page .meta {{ background:white; border:1px solid #e3ddd0; border-radius:10px;
@@ -238,6 +243,73 @@ def extract_lead_sheet(body_html):
         return body_html, None
     return LEAD_SHEET_SECTION_RE.sub("", body_html, count=1), m.group(1)
 
+LYRIC_SECTION_RE = re.compile(
+    r"^##\s+(?:<a[^>]*></a>\s*)?Lyric\s*$(.*?)^##\s",
+    re.S | re.M,
+)
+SLIDE_RE = re.compile(
+    r"^###\s+(?P<title>.+?)\s*$\n(?P<body>(?:(?:^>.*\n?)|(?:^\s*\n))+)",
+    re.M,
+)
+
+def get_audio_variants(slug):
+    """Return [(filename, label)] for every audio file matching this song's slug."""
+    variants = []
+    if not os.path.isdir(AUDIO):
+        return variants
+    for fn in sorted(os.listdir(AUDIO)):
+        if not fn.endswith(".mp3"):
+            continue
+        if fn == f"{slug}.mp3":
+            variants.append((fn, "Demo recording"))
+        elif fn.startswith(f"{slug}-"):
+            suffix = fn[len(slug) + 1:-4]
+            variants.append((fn, suffix.replace("-", " ").capitalize()))
+    return variants
+
+def get_cues(song):
+    """Normalise the song's `cues:` frontmatter to {filename: [float, ...]}.
+
+    Accepted forms:
+      cues: [0, 18.5, 28.2]           -> applies to {slug}.mp3
+      cues: {filename.mp3: [0, ...]}  -> per-file mapping
+    """
+    raw = song.get("cues")
+    if not raw:
+        return {}
+    slug = song["_slug"]
+    if isinstance(raw, list):
+        return {f"{slug}.mp3": [float(t) for t in raw]}
+    if isinstance(raw, dict):
+        return {str(k): [float(t) for t in v] for k, v in raw.items()}
+    return {}
+
+def parse_lyric_slides(body_md):
+    """Extract presentation slides from a song's Lyric section.
+
+    Each `### Heading` followed by a blockquote becomes one slide:
+    {title, lines: [str, ...]}. Returns [] when no Lyric section is found.
+    """
+    m = LYRIC_SECTION_RE.search(body_md + "\n## __end__\n")
+    if not m:
+        return []
+    section = m.group(1)
+    slides = []
+    for sm in SLIDE_RE.finditer(section):
+        title = sm.group("title").strip()
+        raw = sm.group("body")
+        lines = []
+        for ln in raw.splitlines():
+            ln = ln.strip()
+            if not ln.startswith(">"):
+                continue
+            text = ln.lstrip(">").strip()
+            if text:
+                lines.append(text)
+        if lines:
+            slides.append({"title": title, "lines": lines})
+    return slides
+
 def render_song_page(fw, song):
     title = str(song.get("title", "(untitled)"))
     num = song.get("number", "—")
@@ -263,6 +335,14 @@ def render_song_page(fw, song):
     out.append(f"<title>{html.escape(title)} — Paraverses</title>")
     out.append(f"<style>{CSS}</style></head><body><div class='song-page'>")
     out.append("<a class='back' href='../index.html'>&larr; Paraverses</a>")
+    has_slides = bool(parse_lyric_slides(song.get("_body", "")))
+    slug_esc = html.escape(song["_slug"])
+    if has_slides and get_audio_variants(song["_slug"]):
+        out.append(f"<a class='present-link' href='{slug_esc}-preview.html'>"
+                   "Sing along &rarr;</a>")
+    if has_slides:
+        out.append(f"<a class='present-link' href='{slug_esc}-present.html'>"
+                   "Present &rarr;</a>")
     out.append(f"<h1>{html.escape(title)}</h1>")
     out.append(f"<div class='ascription'>Paraverse {html.escape(str(num))} · "
                f"Movement {html.escape(str(mv_id))} — {html.escape(mv_title)} · "
@@ -282,17 +362,7 @@ def render_song_page(fw, song):
     row("Written", song.get("written"))
     out.append("</dl>")
 
-    slug = song["_slug"]
-    audio_variants = []
-    if os.path.isdir(AUDIO):
-        for fn in sorted(os.listdir(AUDIO)):
-            if not fn.endswith(".mp3"):
-                continue
-            if fn == f"{slug}.mp3":
-                audio_variants.append((fn, "Demo recording"))
-            elif fn.startswith(f"{slug}-"):
-                suffix = fn[len(slug) + 1:-4]
-                audio_variants.append((fn, suffix.replace("-", " ").capitalize()))
+    audio_variants = get_audio_variants(song["_slug"])
     if audio_variants:
         for fn, label in audio_variants:
             out.append("<div class='demo'>")
@@ -319,6 +389,415 @@ def render_song_page(fw, song):
                "with attribution and same-license sharing.</div>"
                "</footer>")
     out.append("</div></body></html>")
+    return "\n".join(out)
+
+PRESENT_CSS = """
+* { box-sizing:border-box; }
+html, body { margin:0; padding:0; height:100%; overflow:hidden;
+              background:#070b08; color:#f5efe1;
+              font-family:Georgia,'Times New Roman',serif; }
+body.idle { cursor:none; }
+.bg { position:fixed; inset:0; z-index:0;
+       background:
+         radial-gradient(circle at 20% 30%, rgba(201,168,76,0.18), transparent 55%),
+         radial-gradient(circle at 80% 70%, rgba(26,46,30,0.85), transparent 60%),
+         linear-gradient(160deg, #0d1810 0%, #050807 60%, #0a1410 100%);
+       background-size: 140% 140%;
+       animation: drift 60s ease-in-out infinite alternate; }
+@keyframes drift {
+  0%   { background-position: 0% 0%, 100% 100%, 0% 0%; }
+  100% { background-position: 30% 20%, 70% 80%, 50% 50%; }
+}
+.stage { position:relative; z-index:1; height:100%;
+          display:flex; flex-direction:column; }
+.topbar { display:flex; justify-content:space-between; align-items:center;
+           padding:18px 28px; font-size:13px; letter-spacing:1.5px;
+           text-transform:uppercase; color:rgba(245,239,225,0.55); }
+.topbar a { color:inherit; text-decoration:none; border-bottom:1px solid transparent; }
+.topbar a:hover { border-bottom-color:#c9a84c; color:#f5efe1; }
+.title { color:rgba(245,239,225,0.7); }
+.indicator { font-variant-numeric: tabular-nums; }
+.slide-wrap { flex:1; position:relative; padding:24px 6vw; }
+.slide { position:absolute; inset:0; display:flex; flex-direction:column;
+          align-items:center; justify-content:center; text-align:center;
+          padding:24px 6vw; opacity:0; pointer-events:none;
+          transition:opacity 360ms ease; }
+.slide.show { opacity:1; pointer-events:auto; }
+.slide > * { max-width:1100px; }
+.label { font-style:italic; font-size:clamp(16px,2vw,22px);
+          color:#c9a84c; letter-spacing:2px; text-transform:uppercase;
+          margin-bottom:28px; }
+.lyric { font-size:clamp(28px,5.2vw,68px); line-height:1.35;
+          font-weight:400; text-shadow:0 2px 24px rgba(0,0,0,0.6); }
+.lyric .line { display:block; margin:0.1em 0; }
+.dots { display:flex; justify-content:center; gap:8px;
+         padding:14px 0 22px; }
+.dot { width:8px; height:8px; border-radius:50%;
+        background:rgba(245,239,225,0.18); transition:background 200ms; }
+.dot.active { background:#c9a84c; }
+.hint { position:fixed; bottom:14px; right:18px; z-index:2;
+         font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
+         color:rgba(245,239,225,0.35); transition:opacity 600ms; }
+body.idle .hint { opacity:0; }
+@media (max-width:640px) {
+  .topbar { padding:12px 16px; font-size:11px; }
+  .lyric { font-size:clamp(22px,7vw,40px); }
+}
+"""
+
+PRESENT_JS = """
+(function(){
+  var slides = document.querySelectorAll('.slide');
+  var dots = document.querySelectorAll('.dot');
+  var indicator = document.getElementById('indicator');
+  var total = slides.length;
+  var i = 0;
+  function show(n){
+    if (n < 0) n = 0;
+    if (n >= total) n = total - 1;
+    slides[i].classList.remove('show');
+    if (dots[i]) dots[i].classList.remove('active');
+    i = n;
+    slides[i].classList.add('show');
+    if (dots[i]) dots[i].classList.add('active');
+    if (indicator) indicator.textContent = (i + 1) + ' / ' + total;
+  }
+  function next(){ if (i < total - 1) show(i + 1); }
+  function prev(){ if (i > 0) show(i - 1); }
+  document.addEventListener('keydown', function(e){
+    var k = e.key;
+    if (k === ' ' || k === 'ArrowRight' || k === 'PageDown' || k === 'Enter') {
+      e.preventDefault(); next();
+    } else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'Backspace') {
+      e.preventDefault(); prev();
+    } else if (k === 'Home') {
+      e.preventDefault(); show(0);
+    } else if (k === 'End') {
+      e.preventDefault(); show(total - 1);
+    } else if (k === 'f' || k === 'F') {
+      e.preventDefault();
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    } else if (k === 'Escape') {
+      if (document.fullscreenElement) document.exitFullscreen();
+    }
+  });
+  document.addEventListener('click', function(e){
+    if (e.target.closest('a')) return;
+    var w = window.innerWidth;
+    if (e.clientX < w * 0.25) prev(); else next();
+  });
+  var idleTimer;
+  function wake(){
+    document.body.classList.remove('idle');
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(function(){ document.body.classList.add('idle'); }, 2500);
+  }
+  document.addEventListener('mousemove', wake);
+  document.addEventListener('touchstart', wake);
+  wake();
+  show(0);
+})();
+"""
+
+def render_presentation_page(fw, song, slides):
+    title = str(song.get("title", "(untitled)"))
+    num = song.get("number", "—")
+    slug = song["_slug"]
+    out = []
+    out.append("<!doctype html><html lang='en'><head><meta charset='utf-8'>")
+    out.append("<meta name='viewport' content='width=device-width,initial-scale=1'>")
+    out.append("<meta name='author' content='Attie Retief'>")
+    out.append(f"<title>{html.escape(title)} — Present</title>")
+    out.append(f"<style>{PRESENT_CSS}</style></head>")
+    out.append("<body><div class='bg'></div><div class='stage'>")
+    out.append("<div class='topbar'>"
+               f"<a href='{html.escape(slug)}.html'>&larr; Back</a>"
+               f"<div class='title'>Paraverse {html.escape(str(num))} · {html.escape(title)}</div>"
+               "<div class='indicator' id='indicator'></div>"
+               "</div>")
+    out.append("<div class='slide-wrap'>")
+    for sl in slides:
+        out.append("<div class='slide'>")
+        out.append(f"<div class='label'>{html.escape(sl['title'])}</div>")
+        out.append("<div class='lyric'>")
+        for line in sl["lines"]:
+            out.append(f"<span class='line'>{html.escape(line)}</span>")
+        out.append("</div></div>")
+    out.append("</div>")
+    out.append("<div class='dots'>")
+    for _ in slides:
+        out.append("<span class='dot'></span>")
+    out.append("</div></div>")
+    out.append("<div class='hint'>Space / Click · F = Fullscreen · Esc</div>")
+    out.append(f"<script>{PRESENT_JS}</script>")
+    out.append("</body></html>")
+    return "\n".join(out)
+
+PREVIEW_CSS_EXTRA = """
+.audio-bar { position:relative; z-index:2;
+             display:flex; gap:14px; align-items:center;
+             padding:14px 28px 18px;
+             background:linear-gradient(180deg, transparent, rgba(0,0,0,0.55));
+             flex-wrap:wrap; }
+.audio-bar audio { flex:1; min-width:260px; height:38px;
+                    filter:invert(0.92) hue-rotate(180deg); }
+.audio-bar select { background:rgba(245,239,225,0.06); color:#f5efe1;
+                     border:1px solid rgba(245,239,225,0.25); border-radius:6px;
+                     padding:6px 10px; font:inherit; font-size:13px; }
+.audio-bar select:focus { outline:1px solid #c9a84c; }
+.audio-bar .btn { background:transparent; color:#f5efe1;
+                   border:1px solid rgba(245,239,225,0.3); border-radius:6px;
+                   padding:8px 14px; font:inherit; font-size:12px;
+                   letter-spacing:1.5px; text-transform:uppercase; cursor:pointer;
+                   transition:background 200ms, border-color 200ms; }
+.audio-bar .btn:hover { border-color:#c9a84c; color:#c9a84c; }
+.audio-bar .btn.recording { background:#7a1d1d; border-color:#c94c4c; color:#fff;
+                              animation:pulse 1.4s ease-in-out infinite; }
+@keyframes pulse {
+  0%,100% { box-shadow:0 0 0 0 rgba(201,76,76,0.6); }
+  50%     { box-shadow:0 0 0 8px rgba(201,76,76,0); }
+}
+.audio-bar .mode { font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
+                    color:rgba(245,239,225,0.45); }
+.audio-bar .mode b { color:#c9a84c; font-weight:normal; }
+.modal { position:fixed; inset:0; z-index:10;
+          background:rgba(5,8,7,0.92); display:none;
+          align-items:center; justify-content:center; padding:24px; }
+.modal.open { display:flex; }
+.modal .box { background:#0f1a13; border:1px solid rgba(201,168,76,0.4);
+               border-radius:10px; padding:22px 26px; max-width:640px; width:100%;
+               color:#f5efe1; }
+.modal h3 { margin:0 0 6px; color:#c9a84c; font-size:18px; letter-spacing:1px; }
+.modal p { margin:0 0 14px; color:rgba(245,239,225,0.7); font-size:14px; }
+.modal textarea { width:100%; min-height:160px;
+                   background:#050807; color:#f5efe1;
+                   border:1px solid rgba(245,239,225,0.2); border-radius:6px;
+                   padding:12px; font:13px/1.5 Menlo,Consolas,monospace;
+                   resize:vertical; }
+.modal .row { display:flex; gap:10px; margin-top:12px; justify-content:flex-end; }
+"""
+
+PREVIEW_JS = """
+(function(){
+  var slides = document.querySelectorAll('.slide');
+  var dots = document.querySelectorAll('.dot');
+  var indicator = document.getElementById('indicator');
+  var audio = document.getElementById('audio');
+  var variantSel = document.getElementById('variant');
+  var recordBtn = document.getElementById('record');
+  var modeLabel = document.getElementById('mode');
+  var modal = document.getElementById('modal');
+  var output = document.getElementById('output');
+  var copyBtn = document.getElementById('copy');
+  var closeBtn = document.getElementById('close');
+  var cuesByFile = window.__CUES__ || {};
+  var total = slides.length;
+  var i = 0;
+  var recording = false;
+  var recordedTimes = [];
+
+  function show(n){
+    if (n < 0) n = 0;
+    if (n >= total) n = total - 1;
+    slides[i].classList.remove('show');
+    if (dots[i]) dots[i].classList.remove('active');
+    i = n;
+    slides[i].classList.add('show');
+    if (dots[i]) dots[i].classList.add('active');
+    if (indicator) indicator.textContent = (i + 1) + ' / ' + total;
+  }
+  function currentCues(){
+    var src = audio.currentSrc.split('/').pop().split('?')[0];
+    return cuesByFile[decodeURIComponent(src)] || null;
+  }
+  function setMode(){
+    if (recording) { modeLabel.innerHTML = 'Mode <b>recording</b>'; return; }
+    var c = currentCues();
+    modeLabel.innerHTML = c ? 'Mode <b>auto</b>' : 'Mode <b>manual</b>';
+  }
+  function next(){
+    if (recording) {
+      recordedTimes.push(audio.currentTime);
+      if (i < total - 1) show(i + 1);
+      return;
+    }
+    var c = currentCues();
+    if (c && i + 1 < total && c[i + 1] != null) {
+      audio.currentTime = c[i + 1];
+      if (audio.paused) audio.play();
+    }
+    if (i < total - 1) show(i + 1);
+  }
+  function prev(){
+    if (recording) {
+      if (recordedTimes.length) recordedTimes.pop();
+      if (i > 0) show(i - 1);
+      return;
+    }
+    var c = currentCues();
+    if (c && i > 0 && c[i - 1] != null) {
+      audio.currentTime = c[i - 1];
+    }
+    if (i > 0) show(i - 1);
+  }
+  audio.addEventListener('timeupdate', function(){
+    if (recording) return;
+    var c = currentCues();
+    if (!c) return;
+    var target = 0;
+    for (var k = 0; k < c.length && k < total; k++) {
+      if (audio.currentTime + 0.05 >= c[k]) target = k;
+    }
+    if (target !== i) show(target);
+  });
+  function switchVariant(){
+    if (!variantSel) return;
+    var v = variantSel.value;
+    audio.src = v;
+    audio.load();
+    show(0);
+    setMode();
+  }
+  if (variantSel) variantSel.addEventListener('change', switchVariant);
+
+  function startRecording(){
+    recording = true;
+    recordedTimes = [0];
+    recordBtn.textContent = 'Stop & show cues';
+    recordBtn.classList.add('recording');
+    audio.currentTime = 0;
+    show(0);
+    setMode();
+    var p = audio.play();
+    if (p && p.catch) p.catch(function(){});
+  }
+  function stopRecording(){
+    recording = false;
+    recordBtn.textContent = 'Record cues';
+    recordBtn.classList.remove('recording');
+    audio.pause();
+    setMode();
+    var src = audio.currentSrc.split('/').pop().split('?')[0];
+    var fname = decodeURIComponent(src);
+    var fmt = recordedTimes.map(function(t){ return (Math.round(t * 10) / 10).toFixed(1); });
+    var yaml = 'cues:\\n  ' + fname + ': [' + fmt.join(', ') + ']';
+    output.value = yaml;
+    modal.classList.add('open');
+    output.select();
+  }
+  recordBtn.addEventListener('click', function(){
+    if (recording) stopRecording(); else startRecording();
+  });
+  copyBtn.addEventListener('click', function(){
+    output.select();
+    document.execCommand('copy');
+    copyBtn.textContent = 'Copied';
+    setTimeout(function(){ copyBtn.textContent = 'Copy'; }, 1200);
+  });
+  closeBtn.addEventListener('click', function(){ modal.classList.remove('open'); });
+
+  document.addEventListener('keydown', function(e){
+    if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+    var k = e.key;
+    var modalOpen = modal.classList.contains('open');
+    if (k === 'Escape') {
+      if (modalOpen) modal.classList.remove('open');
+      else if (document.fullscreenElement) document.exitFullscreen();
+      return;
+    }
+    if (modalOpen) return;
+    if (k === ' ' || k === 'ArrowRight' || k === 'PageDown' || k === 'Enter') {
+      e.preventDefault(); next();
+    } else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'Backspace') {
+      e.preventDefault(); prev();
+    } else if (k === 'Home') { e.preventDefault(); show(0); }
+    else if (k === 'End') { e.preventDefault(); show(total - 1); }
+    else if (k === 'f' || k === 'F') {
+      e.preventDefault();
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    } else if (k === 'r' || k === 'R') {
+      e.preventDefault();
+      recordBtn.click();
+    }
+  });
+  document.addEventListener('click', function(e){
+    if (e.target.closest('a, button, audio, select, .audio-bar, .modal')) return;
+    var w = window.innerWidth;
+    if (e.clientX < w * 0.25) prev(); else next();
+  });
+  var idleTimer;
+  function wake(){
+    document.body.classList.remove('idle');
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(function(){ document.body.classList.add('idle'); }, 2500);
+  }
+  document.addEventListener('mousemove', wake);
+  document.addEventListener('touchstart', wake);
+  wake();
+  show(0);
+  setMode();
+})();
+"""
+
+def render_preview_page(fw, song, slides, audio_variants, cues_by_file):
+    title = str(song.get("title", "(untitled)"))
+    num = song.get("number", "—")
+    slug = song["_slug"]
+    out = []
+    out.append("<!doctype html><html lang='en'><head><meta charset='utf-8'>")
+    out.append("<meta name='viewport' content='width=device-width,initial-scale=1'>")
+    out.append("<meta name='author' content='Attie Retief'>")
+    out.append(f"<title>{html.escape(title)} — Sing along</title>")
+    out.append(f"<style>{PRESENT_CSS}{PREVIEW_CSS_EXTRA}</style></head>")
+    out.append("<body><div class='bg'></div><div class='stage'>")
+    out.append("<div class='topbar'>"
+               f"<a href='{html.escape(slug)}.html'>&larr; Back</a>"
+               f"<div class='title'>Paraverse {html.escape(str(num))} · {html.escape(title)}</div>"
+               "<div class='indicator' id='indicator'></div>"
+               "</div>")
+    out.append("<div class='slide-wrap'>")
+    for sl in slides:
+        out.append("<div class='slide'>")
+        out.append(f"<div class='label'>{html.escape(sl['title'])}</div>")
+        out.append("<div class='lyric'>")
+        for line in sl["lines"]:
+            out.append(f"<span class='line'>{html.escape(line)}</span>")
+        out.append("</div></div>")
+    out.append("</div>")
+    out.append("<div class='dots'>")
+    for _ in slides:
+        out.append("<span class='dot'></span>")
+    out.append("</div>")
+
+    out.append("<div class='audio-bar'>")
+    if len(audio_variants) > 1:
+        out.append("<select id='variant'>")
+        for fn, label in audio_variants:
+            out.append(f"<option value='../audio/{html.escape(fn)}'>"
+                       f"{html.escape(label)}</option>")
+        out.append("</select>")
+    first_src = f"../audio/{html.escape(audio_variants[0][0])}"
+    out.append(f"<audio id='audio' controls preload='metadata' src='{first_src}'></audio>")
+    out.append("<button class='btn' id='record'>Record cues</button>")
+    out.append("<span class='mode' id='mode'></span>")
+    out.append("</div>")
+
+    out.append("</div>")
+    out.append("<div class='hint'>Space / Click · F = Fullscreen · R = Record · Esc</div>")
+    out.append("<div class='modal' id='modal'><div class='box'>"
+               "<h3>Recorded cues</h3>"
+               "<p>Paste into the song&rsquo;s frontmatter to enable auto-advance.</p>"
+               "<textarea id='output' readonly></textarea>"
+               "<div class='row'>"
+               "<button class='btn' id='copy'>Copy</button>"
+               "<button class='btn' id='close'>Close</button>"
+               "</div></div></div>")
+    cues_json = json.dumps(cues_by_file)
+    out.append(f"<script>window.__CUES__ = {cues_json};</script>")
+    out.append(f"<script>{PREVIEW_JS}</script>")
+    out.append("</body></html>")
     return "\n".join(out)
 
 def render_index(fw, songs, by_movement):
@@ -482,6 +961,18 @@ def build():
         page = render_song_page(fw, s)
         with open(os.path.join(SITE_SONGS, f"{s['_slug']}.html"), "w", encoding="utf-8") as f:
             f.write(page)
+        slides = parse_lyric_slides(s.get("_body", ""))
+        if slides:
+            present = render_presentation_page(fw, s, slides)
+            with open(os.path.join(SITE_SONGS, f"{s['_slug']}-present.html"),
+                      "w", encoding="utf-8") as f:
+                f.write(present)
+            variants = get_audio_variants(s["_slug"])
+            if variants:
+                preview = render_preview_page(fw, s, slides, variants, get_cues(s))
+                with open(os.path.join(SITE_SONGS, f"{s['_slug']}-preview.html"),
+                          "w", encoding="utf-8") as f:
+                    f.write(preview)
 
     total_target = fw["project"]["target_total"]
     total_weight = sum(status_weight(fw, s.get("status", "idea")) for s in songs)
