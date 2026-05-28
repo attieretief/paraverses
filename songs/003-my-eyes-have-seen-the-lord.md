@@ -11,8 +11,10 @@ written: 2026-05-26
 cues:
   003-my-eyes-have-seen-the-lord-1-choir.mp3: [0.0, 40.0, 79.4, 102.5, 140.4, 164.3, 202.8, 227.1, 265.6, 288.9]
   003-my-eyes-have-seen-the-lord-2-female-solo.mp3: [0.0, 40.3, 79.2, 103.0, 141.6, 166.1, 206.7, 225.6, 264.4, 288.1]
+youtube:
+  003-my-eyes-have-seen-the-lord-1-choir.mp3: https://youtu.be/xMknf3wVSwM
+  003-my-eyes-have-seen-the-lord-2-female-solo.mp3: https://youtu.be/lnk65AUAbJ8
 ---
-
 # My Eyes Have Seen the Lord
 
 *Paraverse 3 — Movement 1: The God Who Is*

@@ -169,6 +169,11 @@ footer a:hover, .song-page .body a:hover, .song-page .ascription a:hover {{
 .song-page .demo audio {{ width:100%; display:block; }}
 .song-page .demo-empty {{ color:var(--slate); font-style:italic; font-size:14px;
                            padding:4px 0; }}
+.song-page .demo .yt {{ display:inline-block; margin-top:8px; font-size:12px;
+                          letter-spacing:1px; text-transform:uppercase;
+                          color:var(--green); text-decoration:none;
+                          border-bottom:1px solid var(--gold); }}
+.song-page .demo .yt:hover {{ color:var(--gold); }}
 .song-page .lead-sheet {{ background:white; border:1px solid #e3ddd0; border-radius:10px;
                            padding:14px 18px; margin:18px 0; overflow-x:auto; }}
 .song-page .lead-sheet svg {{ max-width:100%; height:auto; display:block;
@@ -363,12 +368,19 @@ def render_song_page(fw, song):
     out.append("</dl>")
 
     audio_variants = get_audio_variants(song["_slug"])
+    yt_map = song.get("youtube") or {}
+    if not isinstance(yt_map, dict):
+        yt_map = {}
     if audio_variants:
         for fn, label in audio_variants:
             out.append("<div class='demo'>")
             out.append(f"<div class='demo-label'>{html.escape(label)}</div>")
             out.append(f"<audio controls preload='metadata' "
                        f"src='../audio/{html.escape(fn)}'></audio>")
+            yt = yt_map.get(fn)
+            if yt:
+                out.append(f"<a class='yt' href='{html.escape(str(yt))}' "
+                           f"target='_blank' rel='noopener'>Watch on YouTube &rarr;</a>")
             out.append("</div>")
     else:
         out.append("<div class='demo'>"

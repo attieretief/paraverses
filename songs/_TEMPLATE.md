@@ -8,6 +8,12 @@ threads: []           # any of: Light, The Name, Water and Thirst
 metre: ""             # e.g. "LM (8.8.8.8)" or "CM (8.6.8.6)"
 key_suggestion: ""    # e.g. "D (mid-voice, ~octave range)"
 written: 2026-01-01
+# cues: per-variant audio timestamps for the lyric slides; recorded via the
+# Sing-along page. Lengths must match the number of `### Stanza` slides.
+#   <slug>-1-foo.mp3: [0.0, 18.5, 36.2, 54.8]
+# youtube: per-variant YouTube URL; rendered as a "Watch on YouTube" link
+# next to each audio variant on the song page when present.
+#   <slug>-1-foo.mp3: https://youtu.be/...
 ---
 
 # Working Title

@@ -12,8 +12,10 @@ cues:
 cues:
   002-my-god-and-king-1-choral.mp3: [0.0, 46.8, 74.5, 113.2, 138.6]
   002-my-god-and-king-2-male-solo.mp3: [0.0, 40.8, 73.6, 102.0, 147.0]
+youtube:
+  002-my-god-and-king-1-choral.mp3: https://youtu.be/RQ9Z61i5zv4
+  002-my-god-and-king-2-male-solo.mp3: https://youtu.be/XNd3mZtMV5Y
 ---
-
 # My God and King
 
 *Paraverse 2 — Movement 1: The God Who Is*

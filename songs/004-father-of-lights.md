@@ -10,9 +10,11 @@ key_suggestion: "mid-voice, ~octave range"
 written: 2026-05-27
 cues:
   004-father-of-lights-1-female-solo.mp3: [0.0, 43.5, 72.0, 102.3, 140.2, 168.9]
-  004-father-of-lights-2-choir.mp3: [0.0, 39.8, 68.3, 98.9, 136.7, 164.8]  
+  004-father-of-lights-2-choir.mp3: [0.0, 39.8, 68.3, 98.9, 136.7, 164.8]
+youtube:
+  004-father-of-lights-1-female-solo.mp3: https://youtu.be/M1zAI6-ROCM
+  004-father-of-lights-2-choir.mp3: https://youtu.be/jSw7_9QTwoU
 ---
-
 # Father of Lights
 
 *Paraverse 4 — Movement 1: The God Who Is*

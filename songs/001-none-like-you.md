@@ -10,8 +10,11 @@ key_suggestion: "C (mid-voice, ~octave range)"
 written: 2026-05-22
 cues:
   001-none-like-you-1-female-choir.mp3: [0.0, 38.7, 54.5, 81.8, 96.4, 125.3, 141.0, 167.6, 182.2]
+  001-none-like-you-2-male-solo.mp3: [0.0, 37.9, 56.4, 82.5, 96.4, 126.9, 142.3, 170.7, 184.7]
+youtube:
+  001-none-like-you-1-female-choir.mp3: https://youtu.be/9fgcbzmeXCA
+  001-none-like-you-2-male-solo.mp3: https://youtu.be/p6i28ri9afE
 ---
-
 # None like You
 
 *Paraverse 1 — Movement 1: The God Who Is*
