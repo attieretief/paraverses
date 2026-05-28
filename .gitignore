@@ -7,3 +7,6 @@ __pycache__/
 .DS_Store
 .venv/
 node_modules/
+
+# Prompts used to generate the songs are kept locally only.
+prompts/
