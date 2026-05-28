@@ -165,6 +165,49 @@ The lyric will be approved when it satisfies:
 > The sun may set, the stars may wane —
 > You are the same; You will remain.
 
+## Lead sheet
+
+```abc
+%%pageheight 35cm
+X:1
+T:4:1 · FATHER OF LIGHTS
+T:Paraverses · Movement 1: The God Who Is
+C:Music & Lyrics
+C:Attie Retief, 2026
+M:4/4
+L:1/4
+Q:"Tender, atmospheric — let it rest, let it air" 1/4=76
+K:C
+z/ C/ C/D/ D/C/ D/E/ | E4
+w: You are the light, and light a- lone,
+w: You wrap Your-self in robes of light,
+w: None can ap-proach the light You are,
+w: Too bright for us to bear and live,
+z/ C/ C/E/ D> C | C4
+w: in You there is no night,
+w: a gar-ment none has sewn;
+w: and live to see Your face;
+w: too bright for us to gaze;
+z/ C/ C/D/ D/C/ D/E/ | E4
+w: no shad-ow falls, no dark-ness comes
+w: Fa-ther of fire, of star, of sun
+w: You dwell be-yond the reach of eyes,
+w: so here we stand, with fa-ces hid,
+z/ C/ C/E/ D> C | C2 z/
+w: on-ly un-min- gled light,
+w: all their shin-ing, Your own.
+w: in light no eye can trace.
+w: and of-fer You our praise.
+C/ c/B/ | A2 z/ G/ G/D/ | E2 z/
+w: You nev-er change, You nev-er change;
+C/ c/B/ | A2 z/ G/ G/D/ | E2 z/
+w: Fa-ther of lights, You nev-er change.
+C/ c/B/ | A2 z/ B/ B/d/ | c2 z/
+w: The sun may set, the stars may wane
+C/ D/E/ | F2 z/ E/ C/B,/ | C4
+w: You are the same; You will re- main.
+```
+
 ## Annotated lyric — regulative principle warrant
 
 | Section | Warrant |
@@ -183,4 +226,4 @@ The lyric will be approved when it satisfies:
 - **Voice arc**: second-person address throughout — confession *to* God (V1–V3, *You are the light... You wrap Yourself... None can approach the light You are*), the corporate *we* entering at the veiling (V4, *here we stand, with faces hid, and offer You our praise*), and the hook as the church's repeated, warm confession of the unchanging Light.
 - **Melody and arrangement** (as recorded): warm, intimate, atmospheric, melody-first — a real, hummable tune with a hook you feel in your chest, bathed in luminous, reverberant atmosphere over pad-based orchestration (airy pads, deep reverb, glassy high shimmer). A breathy, human lead voice carries the verses with intimacy and warmth; warm communal backing vocals open up on the hook. Rich warm harmony — 7ths, 9ths, secondary dominants, gentle turnarounds; colourful but warm, never cold or square, with experimental phrasings and chord choices welcomed where they serve the line. Spacious: stretched melody lines, space between stanza lines, restrained chord movement — each line allowed to rest, air, and build. No vocal gymnastics; simple, clean lines with warmth and real emotion. ~76 BPM, gentle. Tender awe, hopeful, glowing. Two recordings ship: the female-solo lead reading and an SATB choir variant in the Eric Whitacre register (a cappella, divisi clusters, voices weaving against each other) — same melody and progressions, different ensemble.
 - **Title**: *Father of Lights* — locked. From James 1:17, sung **in the hook** (*Father of lights, You never change*). Names the generous Source whose light never dims, warm and relational rather than forbidding. Chosen over the earlier *Light Unapproachable* (1 Tim 6:16), which crowned the veil the canon's arc later answers (Heb 10:19; Eph 2:18). Names the source-relation / aseity, not the Genesis creation narrative (§6).
-- **Status**: complete, 2026-05-28. Two audio recordings shipped: female solo (warm ethereal lead) and SATB choir (Whitacre-register a cappella). Lead sheet pending transcription from the recorded melody (held until a future pass).
+- **Status**: complete, 2026-05-28. Two audio recordings shipped (female solo, warm ethereal lead; SATB choir, Whitacre-register a cappella) and lead sheet transcribed in C (verse melody for all four verses + hook).
