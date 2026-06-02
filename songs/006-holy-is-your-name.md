@@ -9,9 +9,11 @@ metre: "8.8.5.8.8.5 verses (AABCCB) + 5.5.5.5 refrain"
 key_suggestion: "Armenian Lydian mode (tonic and fourths emphasised — quartal voicings); a cappella SATB+ ensemble with deep male bass voice carrying a longing line; ~56 BPM sacred stillness"
 written: 2026-06-01
 cues:
-  006-holy-is-your-name.mp3: [0.0, 33.1, 52.5, 84.7, 102.4, 135.9, 151.5, 180.4]
+  006-holy-is-your-name-1-choir.mp3: [0.0, 33.1, 52.5, 84.7, 102.4, 135.9, 151.5, 180.4]
+  006-holy-is-your-name-2-oratoria.mp3: [0.0, 65.7, 83.9, 114.9, 133.4, 178.7, 195.6, 236.6]
 youtube:
-  006-holy-is-your-name.mp3: https://youtu.be/4jtW6DxCw38
+  006-holy-is-your-name-1-choir.mp3: https://youtu.be/4jtW6DxCw38
+  006-holy-is-your-name-2-oratoria.mp3: https://youtu.be/2crCMHSyS2g
 ---
 # Holy Is Your Name
 
