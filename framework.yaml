@@ -62,8 +62,12 @@ design_principles:
   - title: Thematic thread, not literal
     body: >
       Unity comes from three theological motifs resurfacing across movements
-      in new dress — never a repeated lyric or musical fragment: light, the
-      Name, and water/thirst.
+      in new dress — light, the Name, and water/thirst — never carried by a
+      repeated lyric or a musical leitmotif used as the work's unifying
+      signature. This does not forbid tune reuse: a whole tune may carry
+      several unrelated texts (contrafactum), the native economy of the
+      metrical Psalter and Paraphrase tradition. The work is unified by the
+      threads, not by any shared tune.
   - title: Congregation-led, simple melody
     body: >
       Songs are written to be carried by an ordinary congregation without a
@@ -254,15 +258,17 @@ decisions:
     Style: simpler congregation-led melodies, singable without a band or lead voice.
     Trinity: Movement 1 adores the divine nature; the explicit Father/Son/Spirit
     confession is not opened as a separate movement.
+    Tunes: a bounded tune-set, not 72 bespoke melodies. Most texts are written
+    to a portable metre (CM/LM/SM) so a tune can carry several unrelated texts
+    (contrafactum), psalter-style; a small number of bespoke tunes are reserved
+    for hinge songs (the cross movement, doxologies, distinctive forms). Writing
+    to a metre is a lyric decision and does not commit the melody, which is still
+    discovered and reconciled after drafting.
   open:
     - >
       Exact song counts per movement within the 18 / 36 / 18 arc targets — and
       whether any hinge (e.g. a closing Amen or doxology) is deliberately a single
       song.
-    - >
-      The degree of shared metre across songs: enough common metre (CM/LM/SM) for
-      tunes to be interchangeable and quickly learned, versus each song finding its
-      own form.
     - >
       Whether to publish with a companion keyboard/accompaniment edition from the
       outset, given the single-instrument, congregation-led intent.
