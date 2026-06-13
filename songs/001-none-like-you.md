@@ -11,9 +11,13 @@ written: 2026-05-22
 cues:
   001-none-like-you-1-female-choir.mp3: [0.0, 38.7, 54.5, 81.8, 96.4, 125.3, 141.0, 167.6, 182.2]
   001-none-like-you-2-male-solo.mp3: [0.0, 37.9, 56.4, 82.5, 96.4, 126.9, 142.3, 170.7, 184.7]
+  001-none-like-you-3-original.mp3: [0.0, 37.1, 53.0, 80.5, 94.6, 123.2, 138.5, 168.2, 183.0]
+  001-none-like-you-4-piano.mp3: [0.0, 39.0, 53.7, 82.9, 99.5, 127.4, 143.6, 169.4, 185.8]
 youtube:
   001-none-like-you-1-female-choir.mp3: https://youtu.be/9fgcbzmeXCA
   001-none-like-you-2-male-solo.mp3: https://youtu.be/p6i28ri9afE
+  001-none-like-you-3-original.mp3: https://youtu.be/jb1yCfhPWcM
+  001-none-like-you-4-piano.mp3: https://youtu.be/-8SnME5yaV8
 ---
 # None like You
 

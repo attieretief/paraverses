@@ -11,9 +11,13 @@ written: 2026-05-26
 cues:
   003-my-eyes-have-seen-the-lord-1-choir.mp3: [0.0, 40.0, 79.4, 102.5, 140.4, 164.3, 202.8, 227.1, 265.6, 288.9]
   003-my-eyes-have-seen-the-lord-2-female-solo.mp3: [0.0, 40.3, 79.2, 103.0, 141.6, 166.1, 206.7, 225.6, 264.4, 288.1]
+  003-my-eyes-have-seen-the-lord-3-original.mp3: [0.0, 35.2, 74.7, 97.9, 137.0, 160.5, 199.3, 221.2, 260.0, 283.9]
+  003-my-eyes-have-seen-the-lord-4-piano.mp3: [0.0, 37.1, 60.0, 81.0, 102.3, 125.3, 146.1, 170.7, 191.0, 212.1]
 youtube:
   003-my-eyes-have-seen-the-lord-1-choir.mp3: https://youtu.be/xMknf3wVSwM
   003-my-eyes-have-seen-the-lord-2-female-solo.mp3: https://youtu.be/lnk65AUAbJ8
+  003-my-eyes-have-seen-the-lord-3-original.mp3: https://youtu.be/U1nU4ttpIAk
+  003-my-eyes-have-seen-the-lord-4-piano.mp3: https://youtu.be/WMt33UBVMWQ
 ---
 # My Eyes Have Seen the Lord
 

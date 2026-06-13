@@ -12,9 +12,11 @@ cues:
 cues:
   002-my-god-and-king-1-choral.mp3: [0.0, 46.8, 74.5, 113.2, 138.6]
   002-my-god-and-king-2-male-solo.mp3: [0.0, 40.8, 73.6, 102.0, 147.0]
+  002-my-god-and-king-3-piano.mp3: [0.0, 42.0, 71.8, 105.1, 131.6]
 youtube:
   002-my-god-and-king-1-choral.mp3: https://youtu.be/RQ9Z61i5zv4
   002-my-god-and-king-2-male-solo.mp3: https://youtu.be/XNd3mZtMV5Y
+  002-my-god-and-king-3-piano.mp3: https://youtu.be/WDB8f0GmoNE
 ---
 # My God and King
 

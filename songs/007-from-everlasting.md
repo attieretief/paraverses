@@ -11,9 +11,13 @@ written: 2026-06-02
 cues:
   007-from-everlasting-1-choir.mp3: [0.0, 39.5, 62.2, 91.6, 114.8, 166.4, 188.3]
   007-from-everlasting-2-live-band.mp3: [0.0, 30.2, 51.2, 81.5, 102.4, 143.9, 164.5]
+  007-from-everlasting-3-original.mp3: [0.0, 40.2, 63.1, 93.2, 113.4, 166.6, 186.4]
+  007-from-everlasting-4-piano.mp3: [0.0, 41.7, 64.5, 95.9, 118.6, 152.6, 177.0]
 youtube:
   007-from-everlasting-1-choir.mp3: https://youtu.be/b_gIxWPR0jQ
   007-from-everlasting-2-live-band.mp3: https://youtu.be/v05Igpfqcxk
+  007-from-everlasting-3-original.mp3: https://youtu.be/9Ylch7d9PAk
+  007-from-everlasting-4-piano.mp3: https://youtu.be/vmso2j0KNW4
 ---
 # From Everlasting
 

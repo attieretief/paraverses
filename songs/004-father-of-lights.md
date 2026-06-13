@@ -11,9 +11,11 @@ written: 2026-05-27
 cues:
   004-father-of-lights-1-female-solo.mp3: [0.0, 43.5, 72.0, 102.3, 140.2, 168.9]
   004-father-of-lights-2-choir.mp3: [0.0, 39.8, 68.3, 98.9, 136.7, 164.8]
+  004-father-of-lights-3-piano.mp3: [0.0, 42.9, 69.9, 98.9, 118.4, 128.8]
 youtube:
   004-father-of-lights-1-female-solo.mp3: https://youtu.be/M1zAI6-ROCM
   004-father-of-lights-2-choir.mp3: https://youtu.be/jSw7_9QTwoU
+  004-father-of-lights-3-piano.mp3: https://youtu.be/3WOD5FIV1Hc
 ---
 # Father of Lights
 

@@ -9,9 +9,13 @@ metre: "LM (8.8.8.8, ABCB), set in 6/8 compound triple"
 key_suggestion: "E major, dotted-quarter ≈53 BPM (mid-voice, ~octave range)"
 written: 2026-05-28
 cues:
-  005-fountain-of-life.mp3: [0.0, 32.9, 64.2, 116.3, 147.8]
+  005-fountain-of-life-1-original.mp3: [0.0, 49.6, 79.9, 127.8, 159.5]
+  005-fountain-of-life-2-piano.mp3: [0.0, 54.4, 86.8, 141.4, 174.5]
+  005-fountain-of-life-3-female-solo.mp3: [0.0, 32.9, 64.2, 116.3, 147.8]
 youtube:
-  005-fountain-of-life.mp3: https://youtu.be/E2xjv-_4MgI
+  005-fountain-of-life-1-original.mp3: https://youtu.be/9CYsRHBFum4
+  005-fountain-of-life-2-piano.mp3: https://youtu.be/vDrgE-6vXDk
+  005-fountain-of-life-3-female-solo.mp3: https://youtu.be/E2xjv-_4MgI
 ---
 # Fountain of Life
 
