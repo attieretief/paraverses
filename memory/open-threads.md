@@ -50,3 +50,15 @@ does something nothing they own can do.
 
 **Related, from the same exercise:** the canon has essentially **no lament or doubt song at all**, so
 this isn't a Paraverses gap alone — it's a gap in what that congregation can sing.
+
+## Rendered videos leak the stage direction in the lyric heading (found 2026-08-13)
+
+The choir render of **003 "My Eyes Have Seen the Lord"** displays
+`REFRAIN *(HALF THE SPEED OF THE VERSE)*` — **raw markdown asterisks and all** — on the first two
+refrain cards. On a projector in a service it reads as a mistake rather than as a performance note.
+
+Found while building RCBE's 16 Aug deck, where this song is Paraverses' first proper outing in that
+congregation, so it lands in front of people who have never seen the work before. **Cheap fix:** keep
+the direction out of the *lyric* heading (or strip annotations in the render step), then re-render.
+Worth checking whether the other completed songs' renders carry the same leak before the next outing.
+_(Related: `claude-home/memory/rcbe-song-canon.md` — Paraverses introduction policy.)_
