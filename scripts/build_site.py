@@ -400,7 +400,7 @@ def render_song_page(fw, song):
                "<div>Free to sing, print, project, record, translate, and arrange "
                "with attribution and same-license sharing.</div>"
                "</footer>")
-    out.append("</div></body></html>")
+    out.append('<script data-goatcounter="https://paraverses.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script></div></body></html>')
     return "\n".join(out)
 
 PRESENT_CSS = """
@@ -543,7 +543,7 @@ def render_presentation_page(fw, song, slides):
     out.append("</div></div>")
     out.append("<div class='hint'>Space / Click · F = Fullscreen · Esc</div>")
     out.append(f"<script>{PRESENT_JS}</script>")
-    out.append("</body></html>")
+    out.append('<script data-goatcounter="https://paraverses.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script></body></html>')
     return "\n".join(out)
 
 PREVIEW_CSS_EXTRA = """
@@ -809,7 +809,7 @@ def render_preview_page(fw, song, slides, audio_variants, cues_by_file):
     cues_json = json.dumps(cues_by_file)
     out.append(f"<script>window.__CUES__ = {cues_json};</script>")
     out.append(f"<script>{PREVIEW_JS}</script>")
-    out.append("</body></html>")
+    out.append('<script data-goatcounter="https://paraverses.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script></body></html>')
     return "\n".join(out)
 
 def render_index(fw, songs, by_movement):
@@ -945,7 +945,7 @@ def render_index(fw, songs, by_movement):
                f"<div>Generated {stamp} from the repository. "
                "Progress reflects committed songs. — Paraverses</div>"
                "</footer>")
-    out.append("</div></body></html>")
+    out.append('<script data-goatcounter="https://paraverses.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script></div></body></html>')
     return "\n".join(out)
 
 def build():
