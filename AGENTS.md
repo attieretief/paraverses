@@ -127,3 +127,5 @@ Dual: creative content (lyrics, music, lead sheets, demos, framework prose) unde
 4.0** (`LICENSE-CONTENT`); build scripts and site code under **MIT** (`LICENSE`). Required
 attribution for reuse: *"Words and music by Attie Retief, from Paraverses, licensed under
 CC BY-SA 4.0."*
+
+**Content shape:** anything public from this repo (posts, videos, talks, intros) follows `~/Github/attieretief/hub/guides/content-recipe.md`: felt hook, then mechanism, then the click, then end small. Low-key, honest, one hard specific per piece. This repo's own voice rules still govern the prose.
